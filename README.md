@@ -11,7 +11,7 @@ pip install git+https://github.com/bengebre/fourtify
 
 ## Example code
 
-The rendered notebook ```FourtifyExamples.ipynb``` in the [examples/](https://github.com/bengebre/fourtify/blob/main/examples/FourtifyExamples.ipynb) directory extends a 3 night candidate link found with HelioLinC in DP0.3 data to 8 nights.
+The rendered notebook ```FourtifyExamples.ipynb``` in the [examples/](https://github.com/bengebre/fourtify/blob/main/examples/) directory extends a 3 night candidate link found with HelioLinC in DP0.3 data to 8 nights.
 
 ## Acknowlegements
 
