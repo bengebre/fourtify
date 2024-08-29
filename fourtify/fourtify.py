@@ -48,6 +48,18 @@ class Fourtify:
     def __ec2eq(vectors,obliquity):
         """
         For ecliptic to equitorial rotation.
+
+        Parameters:
+        -----------
+        vectors : ndarray
+            Nx3 array of position vectors to rotate.
+        obliquity : float
+            Obliquity of the ecliptic in radians.
+
+        Returns:
+        --------
+        ndarray
+            Rotated vectors.
         """
         rot_x = np.array([[1, 0, 0],
                           [0, np.cos(obliquity), -np.sin(obliquity)],
@@ -59,7 +71,28 @@ class Fourtify:
     def __el2rv(a,e,i,node,peri,M):
         """
         Convert orbital elements in degrees (M=mean anomaly) to pos,vel (AU,AU/d)
+
+        Parameters:
+        -----------
+        a : float
+            Semi major axis of orbit. (AU)
+        e : float
+            Eccentricity of orbit.
+        i : float
+            Inclination of orbit. (deg)
+        node : float
+            Right ascension of the ascending node. (deg)
+        peri : float
+            Argument of periapse. (deg)
+        M : float
+            Mean anomoly. (deg)
+
+        Returns:
+        --------
+        ndarray
+            Position and velocity of orbit orbital elements
         """
+        
         M_sun = 1.988409870698051e+30 #const.M_sun.value
         au_m = 149597870700.0 #float(u.AU.to('m'))
         
@@ -77,7 +110,24 @@ class Fourtify:
         """
         Take an orbit and propagate it to all observation times then transform resulting 
         heliocentric vectors to the observer's location on the sky.
+
+        Parameters:
+        -----------
+        elems : tuple
+            Orbital elements: (a,e,i,node,peri,M) (AU,float,deg,deg,deg,deg)
+        epoch_tdb : float
+            Epoch (time) for orbital elements.  (TDB Julian date)
+        obs_locs : ndarray
+            Heliocentric observer locations in time. (AU)
+        obs_times_tdb : ndarray
+            Observation times. (TDB)
+
+        Returns:
+        --------
+        ndarray
+            RA and DEC of propagated position vectors at the observer location and times.
         """
+        
         ooe = np.deg2rad(23.4392911) #from Horizons vector report web table
         mu = 0.00029591220819207774 #(const.M_sun * const.G).to('AU**3/day**2').value; units:AU**3/d**2
         c = 173.1446326742403 #const.c.to('AU/s').value*86400; units:AU/d
@@ -114,10 +164,31 @@ class Fourtify:
         return radecs
 
     def orbit(self,elems,epoch,thresh):
+        """
+        Takes a specified orbit propagates it to all observation times then finds the sources 
+        with small offsets from the propagated path that might belong to the object.
+
+        Parameters:
+        -----------
+        elems : tuple
+            Orbital elements: (a,e,i,node,peri,M) (AU,float,deg,deg,deg,deg)
+        epoch : float
+            Epoch (time) for orbital elements.  (TDB Julian date)
+        thresh : tuple
+            Threshold for RA/DEC offset from predicted orbit. (arcsec/day, maximum arcsec)
+        
+        Returns:
+        --------
+        list
+            Indicies of observations that were within the threshold constraints.
+        ndarray
+            Deviations of returned observation indicies from predicted position. (arcsec)
+        """
+        
         prop_radecs = self.__orb2obs(elems,epoch,self.obs_locs,self.obs_times)
         dradecs = np.linalg.norm(prop_radecs - self.obs_radecs,axis=1)*3600
         found_abs_idx = np.where(dradecs < thresh[0])[0]
         found_rate_idx = np.where(np.abs((dradecs)/(self.obs_times-epoch)) < thresh[1])[0]
         fidx = sorted(list(set(found_abs_idx) & set(found_rate_idx)))
 
-        return fidx
+        return dradecs[fidx],fidx
