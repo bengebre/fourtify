@@ -24,11 +24,6 @@ ff = Fourtify(obs_radecs,obs_times,obs_locs)    #observer RA/DEC (degrees), obse
 dradecs,fidx = ff.orbit(elems,epoch,(10,1))     #(a,e,i,peri,node,M) (degrees), orbit epoch (TDB jdate), (deviation, deviation rate) (arcsec, arcsec/day)
 ```
 
-```python
-ff = Fourtify(obs_radecs,obs_times,obs_locs)    
-dradecs,fidx = ff.orbit(elems,epoch,(10,1))     
-```
-
 <br />
 
 For a more complete example, the rendered notebook ```FourtifyExamples.ipynb``` in the [examples/](https://github.com/bengebre/fourtify/blob/main/examples/) directory extends a 3 night candidate link found with HelioLinC in DP0.3 data to 8 nights.
