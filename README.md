@@ -1,5 +1,5 @@
 # Fourtify
-Fourtify finds additional transient sources along a specified orbit in a transient source dataset in order to extend linkages to 4+ nights.
+Fourtify finds additional sources along a specified orbit in a transient source dataset in order to extend linkages to 4+ nights.
 
 ## Installation
 While Fourtify is a generalized implementation for any observer at any location, this initial release was designed to work "out of the box" with the Vera C. Rubin telescope's DP0.3 simulation data on the Rubin Science Platform (RSP). As such, the example code in this repository currently requires access to the RSP to run. With that said, the code should be explanatory for those looking to use Fourtify with observations from other observatories.
