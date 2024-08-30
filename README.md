@@ -15,7 +15,7 @@ pip install git+https://github.com/bengebre/fourtify
 
 Fourtify is initialized in the examlpe below via `Fourtify()` with the observational data you will be searching: `obs_radecs`: *observation RA and DEC*, `obs_times`: *observation times*, and `obs_locs`: *observer heliocentric locations*.  You only have to initialize the observational data once.  
 
-Next, the `orbit()` method is used to search along the specified orbit defined by `elems`: *(a,e,i,peri,node,M)* at the `epoch` *time* for observations that are within (in the example below) *10"*  at most and deviating at a rate no more than *1" per day* from this orbit (a cone that spreads out 1"/day until it reaches 10" and is fixed at 10" thereafter).  The `orbit()` method returns `dradecs`: *the residuals of the sources found in the observation set that meet these criteria* and `fidx`: *the indicies of those sources*.
+Next, the `orbit()` method is used to search along the specified orbit defined by `elems`: *(a,e,i,peri,node,M)* at the `epoch` *time* for observations that are within (in the example below) *10"*  at most and deviating at a rate no more than *1" per day* from this orbit (a cone that spreads out 1"/day until it reaches 10" and is fixed at 10" thereafter).  The `orbit()` method returns `dradecs`: *the residuals of the sources found in the observation set that meet these criteria* and `fidx`: *the indices of those sources*.
 
 <br />
 
