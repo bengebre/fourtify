@@ -19,7 +19,7 @@ class Fourtify:
     Methods:
     --------
     orbit(elems,epoch,thresh): 
-        Returns the indicies of the observations along the specified orbit.
+        Returns the indices of the observations along the specified orbit.
     __ec2eq(vectors,obliquity):
         Private method that rotates from ecliptic to equitorial coordinates.
     __el2rv(a,e,i,node,peri,M):
@@ -180,9 +180,9 @@ class Fourtify:
         Returns:
         --------
         list
-            Indicies of observations that were within the threshold constraints.
+            Indices of observations that were within the threshold constraints.
         ndarray
-            Deviations of returned observation indicies from predicted position. (arcsec)
+            Deviations of returned observation indices from predicted position. (arcsec)
         """
         
         prop_radecs = self.__orb2obs(elems,epoch,self.obs_locs,self.obs_times)
