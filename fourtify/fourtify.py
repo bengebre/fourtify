@@ -175,7 +175,7 @@ class Fourtify:
         epoch : float
             Epoch (time) for orbital elements.  (TDB Julian date)
         thresh : tuple
-            Threshold for RA/DEC offset from predicted orbit. (arcsec/day, maximum arcsec)
+            Threshold for RA/DEC offset from predicted orbit. (maximum arcsec, arcsec/day, init arcsec)
         
         Returns:
         --------
@@ -188,7 +188,7 @@ class Fourtify:
         prop_radecs = self.__orb2obs(elems,epoch,self.obs_locs,self.obs_times)
         dradecs = np.linalg.norm(prop_radecs - self.obs_radecs,axis=1)*3600
         found_abs_idx = np.where(dradecs < thresh[0])[0]
-        found_rate_idx = np.where(np.abs((dradecs)/(self.obs_times-epoch)) < thresh[1])[0]
+        found_rate_idx = np.where(np.abs((dradecs)/(self.obs_times-epoch)) < thresh[1] + thresh[2])[0]
         fidx = sorted(list(set(found_abs_idx) & set(found_rate_idx)))
 
         return dradecs[fidx],fidx
