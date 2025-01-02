@@ -163,6 +163,39 @@ class Fourtify:
         
         return radecs
 
+    @staticmethod
+    def __state2obs(rv,epoch_tdb,obs_locs,obs_times_tdb,plane='equatorial'):
+        ooe = np.deg2rad(23.4392911) #from Horizons vector report web table
+        mu = 0.00029591220819207774 #(const.M_sun * const.G).to('AU**3/day**2').value; units:AU**3/d**2
+        c = 173.1446326742403 #const.c.to('AU/s').value*86400; units:AU/d
+
+        if plane=='ecliptic':
+            #rotate if state vector in ecliptic plane (need to test)
+            rv = np.concatenate(Fourtify.__ec2eq(rv[0:3],ooe),Fourtify.__ec2eq(rv[3:6],ooe))
+            rv_prop_eq = prop(obs_times_tdb,rv,epoch_tdb,mu)
+        else:
+            #prop equatorial state vector at epoch to obs_times
+            rv_prop_eq = prop(obs_times_tdb,rv,epoch_tdb,mu)
+
+        #equatorial object position from observer location
+        obj_pos_eq = rv_prop_eq[:,0:3] - obs_locs
+
+        #calculate light time to object from observer and decrement TDB propagation time by that duration
+        obs_times_tdb_ltc = obs_times_tdb - (np.linalg.norm(obj_pos_eq,axis=1)/c)
+
+        #propagate heliocentric *equatorial* vector to light time corrected time
+        rv_prop_ltc_eq = prop(obs_times_tdb_ltc,rv,epoch_tdb,mu)
+
+        #calculate observer relative object position with ltc
+        obj_pos_eq_ltc = rv_prop_ltc_eq[:,0:3] - obs_locs
+
+        #convert observer relative positions to RA/DECs
+        coords = SkyCoord(x=obj_pos_eq_ltc[:,0], y=obj_pos_eq_ltc[:,1], z=obj_pos_eq_ltc[:,2],
+                          unit='AU', representation_type='cartesian', frame='icrs')
+        radecs = np.column_stack([coords.spherical.lon.value,coords.spherical.lat.value])
+
+        return radecs
+
     def orbit(self,elems,epoch,thresh):
         """
         Takes a specified orbit propagates it to all observation times then finds the sources 
@@ -186,6 +219,16 @@ class Fourtify:
         """
         
         prop_radecs = self.__orb2obs(elems,epoch,self.obs_locs,self.obs_times)
+        dradecs = np.linalg.norm(prop_radecs - self.obs_radecs,axis=1)*3600
+        found_abs_idx = np.where(dradecs < thresh[0])[0]
+        found_rate_idx = np.where(np.abs((dradecs)/(self.obs_times-epoch)) < thresh[1] + thresh[2])[0]
+        fidx = sorted(list(set(found_abs_idx) & set(found_rate_idx)))
+
+        return dradecs[fidx],fidx
+
+    def state(self,rv,epoch,thresh,plane='equatorial'):
+        
+        prop_radecs = self.__state2obs(rv,epoch,self.obs_locs,self.obs_times)
         dradecs = np.linalg.norm(prop_radecs - self.obs_radecs,axis=1)*3600
         found_abs_idx = np.where(dradecs < thresh[0])[0]
         found_rate_idx = np.where(np.abs((dradecs)/(self.obs_times-epoch)) < thresh[1] + thresh[2])[0]
