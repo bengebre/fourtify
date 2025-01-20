@@ -228,7 +228,7 @@ class Fourtify:
 
     def state(self,rv,epoch,thresh,plane='equatorial'):
         
-        prop_radecs = self.__state2obs(rv,epoch,self.obs_locs,self.obs_times)
+        prop_radecs = self.__state2obs(rv,epoch,self.obs_locs,self.obs_times,plane)
         dradecs = np.linalg.norm(prop_radecs - self.obs_radecs,axis=1)*3600
         found_abs_idx = np.where(dradecs < thresh[0])[0]
         found_rate_idx = np.where(np.abs((dradecs)/(self.obs_times-epoch)) < thresh[1] + thresh[2])[0]
