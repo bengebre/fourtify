@@ -23,19 +23,19 @@ The `orbit()` method returns `dradecs`: *the residuals of the sources found in t
 
 ```python
 ff = Fourtify(obs_radecs,obs_times,obs_locs)    #observer RA/DEC (degrees), observation times (TDB jdate), observer locations (heliocentric AU)
-dradecs,fidx = ff.orbit(elems,epoch,(10,1))     #(a,e,i,peri,node,M) (degrees), orbit epoch (TDB jdate), (deviation, deviation rate) (arcsec, arcsec/day)
+dradecs,fidx = ff.orbit(elems,epoch,10)     #(a,e,i,peri,node,M) (degrees), orbit epoch (TDB jdate), deviation (arcsec)
 ```
 
 ## Example notebooks
 
-For a more complete example, the rendered notebooks ```FourtifyExamples.ipynb``` in the [examples/](https://github.com/bengebre/fourtify/blob/main/examples/) directory extends a 3 night candidate link found with HelioLinC in DP0.3 data to 8 nights.  If you haven't calculated the orbit yet, ```FopyFourtifyExamples.ipynb``` shows how to use [Fopy](https://github.com/bengebre/fopy) to call [Find_Orb](https://www.projectpluto.com/find_orb.htm) to get an orbit solution you can pass to Fourtify.
+For a more complete example, the rendered notebooks ```FourtifyExamples.ipynb``` in the [examples/](https://github.com/bengebre/fourtify/blob/main/examples/) directory extends a 3 night candidate link found with HelioLinC in DP0.3 data to 8 nights.
 
 ## Acknowlegements
 
 Developer and maintainer:
 - [Ben Engebreth](https://benengebreth.org/)
 
-Contributors and collaborators:
+Collaborators:
 - [Siegfried Eggl](https://aerospace.illinois.edu/directory/profile/eggl)
 - [Ari Heinze](https://astro.washington.edu/people/aren-heinze)
 

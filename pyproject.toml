@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fourtify"
-version = "0.1.0"
+version = "0.2.0"
 description = "Fourtify finds additional sources along a specified orbit in a transient source dataset."
 authors = [{name = "Ben Engebreth", email = "ben.engebreth@gmail.com"}]
 readme = "README.md"
