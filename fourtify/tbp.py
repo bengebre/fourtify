@@ -15,7 +15,7 @@ def twobody(X, t, mu):
 
     return dX_dt
 
-def prop(times, X, t, mu):
+def prop(times, X, t, mu, tol=1e-9):
     """
     Propagate a state vector (X) at a time (t) to other times (times) given a gravitational parameter (mu).
     """
@@ -29,8 +29,8 @@ def prop(times, X, t, mu):
     nsdts = np.concatenate(([0],np.flip(sdts[~gtez_bools]))) #negative time deltas from 0
 
     #integrate in negative time direction then positive time direction
-    intn = odeint(twobody, X, nsdts, (mu,), rtol=1e-6, atol=1e-6)[-1:0:-1] #integrate negative time deltas
-    intp = odeint(twobody, X, psdts, (mu,), rtol=1e-6, atol=1e-6)[1:] #integrate positive time deltas
+    intn = odeint(twobody, X, nsdts, (mu,), rtol=tol, atol=tol)[-1:0:-1] #integrate negative time deltas
+    intp = odeint(twobody, X, psdts, (mu,), rtol=tol, atol=tol)[1:] #integrate positive time deltas
 
     #state at specified times
     X_times = np.concatenate((intn,intp))[sidx,:] #join integrations and reproduce original times order

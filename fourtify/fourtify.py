@@ -189,8 +189,8 @@ class Fourtify:
             RA and DEC of propagated position vectors at the observer location and times.
         """
         if plane=='ecliptic':
-            #rotate if state vector in ecliptic plane (need to test)
-            rv = np.concatenate(Fourtify.ec2eq(rv[0:3],Fourtify.OOE),Fourtify.ec2eq(rv[3:6],Fourtify.OOE))
+            #rotate if state vector in ecliptic plane
+            rv = np.concatenate((Fourtify.ec2eq(rv[0:3],Fourtify.OOE),Fourtify.ec2eq(rv[3:6],Fourtify.OOE)))
             rv_prop_eq = prop(obs_times_tdb,rv,epoch_tdb,Fourtify.MU)
         else:
             #prop equatorial state vector at epoch to obs_times
@@ -246,7 +246,6 @@ class Fourtify:
             thresh = thresh[0]
 
         prop_radecs = self.orb2obs(elems,epoch,self.obs_locs,self.obs_times)
-        #dradecs = np.linalg.norm(prop_radecs - self.obs_radecs,axis=1)*3600
         prop = SkyCoord(prop_radecs[:, 0], prop_radecs[:, 1], unit='deg')
         obs = SkyCoord(self.obs_radecs[:, 0], self.obs_radecs[:, 1], unit='deg')
         dradecs = prop.separation(obs).arcsec
@@ -287,7 +286,9 @@ class Fourtify:
             thresh = thresh[0]
 
         prop_radecs = self.state2obs(rv,epoch,self.obs_locs,self.obs_times,plane)
-        dradecs = np.linalg.norm(prop_radecs - self.obs_radecs,axis=1)*3600
+        prop = SkyCoord(prop_radecs[:, 0], prop_radecs[:, 1], unit='deg')
+        obs = SkyCoord(self.obs_radecs[:, 0], self.obs_radecs[:, 1], unit='deg')
+        dradecs = prop.separation(obs).arcsec
         found_abs_idx = np.where(dradecs < thresh)[0]
         fidx = sorted(list(found_abs_idx))
 
